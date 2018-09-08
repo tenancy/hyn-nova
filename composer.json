@@ -1,0 +1,30 @@
+{
+    "name": "tenancy/hyn-nova",
+    "description": "Allows managing hyn/multi-tenant inside Nova.",
+    "keywords": [
+        "laravel",
+        "nova",
+        "tenancy"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tenancy\\HynNova\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tenancy\\HynNova\\ToolServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
