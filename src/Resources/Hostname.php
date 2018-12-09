@@ -21,7 +21,7 @@ class Hostname extends Resource
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'fqdn';
 
     /**
      * The columns that should be searched.
@@ -66,6 +66,8 @@ class Hostname extends Resource
 
             Fields\DateTime::make('Under Maintenance Since')
                 ->rules(array_get($rules, 'under_maintenance_since', [])),
+
+            Fields\BelongsTo::make('Tenant', 'website'),
         ];
     }
 
