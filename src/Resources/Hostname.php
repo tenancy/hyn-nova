@@ -2,10 +2,10 @@
 
 namespace Tenancy\HynNova\Resources;
 
-use Hyn\Tenancy\Validators\HostnameValidator;
-use Laravel\Nova\Fields;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Resource;
+use Tenancy\HynNova\Validators\HostnameValidator;
 
 class Hostname extends Resource
 {
@@ -21,7 +21,7 @@ class Hostname extends Resource
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'fqdn';
 
     /**
      * The columns that should be searched.
@@ -48,24 +48,28 @@ class Hostname extends Resource
      */
     public function fields(Request $request)
     {
-        $rules = (new HostnameValidator())->getRulesFor($this->model());
+        $creationRules = (new HostnameValidator())->getRulesFor($this->model());
+        $updateRules = (new HostnameValidator())->getRulesFor($this->model(), 'update');
 
         return [
             Fields\ID::make()->sortable(),
 
             Fields\Text::make('Fqdn')
                 ->sortable()
-                ->rules(array_get($rules, 'fqdn', [])),
+                ->creationRules(array_get($creationRules, 'fqdn', []))
+                ->updateRules(array_get($updateRules, 'fqdn', [])),
 
             Fields\Text::make('redirect_to')
                 ->sortable()
-                ->rules(array_get($rules, 'redirect_to', [])),
+                ->rules(array_get($creationRules, 'redirect_to', [])),
 
             Fields\Boolean::make('Force HTTPS')
-                ->rules(array_get($rules, 'force_https')),
+                ->rules(array_get($creationRules, 'force_https')),
 
             Fields\DateTime::make('Under Maintenance Since')
-                ->rules(array_get($rules, 'under_maintenance_since', [])),
+                ->rules(array_get($creationRules, 'under_maintenance_since', [])),
+
+            Fields\BelongsTo::make('Tenant', 'website'),
         ];
     }
 

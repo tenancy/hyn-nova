@@ -7,6 +7,8 @@ use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Tenancy\HynNova\Http\Middleware\Authorize;
+use Tenancy\HynNova\Observers\HostnameObserver;
+use Tenancy\HynNova\Observers\WebsiteObserver;
 use Tenancy\HynNova\Resources\Hostname;
 use Tenancy\HynNova\Resources\Tenant;
 
@@ -21,9 +23,9 @@ class ToolServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'hyn-nova');
 
-        $this->app->booted(function () {
-            $this->routes();
-        });
+//        $this->app->booted(function () {
+//            $this->routes();
+//        });
 
         Nova::serving(function (ServingNova $event) {
             Nova::resources([
@@ -31,6 +33,8 @@ class ToolServiceProvider extends ServiceProvider
                 Hostname::class
             ]);
         });
+
+        $this->bootObservers();
     }
 
     /**
@@ -57,5 +61,13 @@ class ToolServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    public function bootObservers()
+    {
+        $config = $this->app['config']['tenancy.models'];
+
+        forward_static_call([$config['website'], 'observe'], WebsiteObserver::class);
+        forward_static_call([$config['hostname'], 'observe'], HostnameObserver::class);
     }
 }

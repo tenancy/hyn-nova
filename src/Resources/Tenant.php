@@ -2,11 +2,10 @@
 
 namespace Tenancy\HynNova\Resources;
 
-use Hyn\Tenancy\Models\Website;
-use Hyn\Tenancy\Validators\WebsiteValidator;
-use Laravel\Nova\Fields;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields;
 use Laravel\Nova\Resource;
+use Tenancy\HynNova\Validators\WebsiteValidator;
 
 class Tenant extends Resource
 {
@@ -15,14 +14,14 @@ class Tenant extends Resource
      *
      * @var string
      */
-    public static $model = Website::class;
+    public static $model = \Hyn\Tenancy\Models\Website::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'uuid';
 
     /**
      * The columns that should be searched.
@@ -49,14 +48,17 @@ class Tenant extends Resource
      */
     public function fields(Request $request)
     {
-        $rules = (new WebsiteValidator())->getRulesFor($this->model());
+        $creationRules = (new WebsiteValidator())->getRulesFor($this->model());
+        $updateRules = (new WebsiteValidator())->getRulesFor($this->model(), 'update');
 
         return [
             Fields\ID::make()->sortable(),
 
             Fields\Text::make('Uuid')
                 ->sortable()
-                ->rules(array_get($rules, 'uuid', [])),
+                ->creationRules(array_get($creationRules, 'uuid', []))
+                ->updateRules(array_get($updateRules, 'uuid', []))
+                ->help(!config('tenancy.website.disable-random-id') ? 'Will be generated automatically if left blank' : ''),
 
             Fields\HasMany::make('Hostnames')
         ];
