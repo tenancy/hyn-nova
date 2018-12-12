@@ -57,7 +57,8 @@ class Tenant extends Resource
             Fields\Text::make('Uuid')
                 ->sortable()
                 ->creationRules(array_get($creationRules, 'uuid', []))
-                ->updateRules(array_get($updateRules, 'uuid', [])),
+                ->updateRules(array_get($updateRules, 'uuid', []))
+                ->help(!config('tenancy.website.disable-random-id') ? 'Will be generated automatically if left blank' : ''),
 
             Fields\HasMany::make('Hostnames')
         ];
