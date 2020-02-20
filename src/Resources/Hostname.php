@@ -2,9 +2,10 @@
 
 namespace Tenancy\HynNova\Resources;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Resource;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use Tenancy\HynNova\Validators\HostnameValidator;
 
 class Hostname extends Resource
@@ -44,6 +45,7 @@ class Hostname extends Resource
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function fields(Request $request)
@@ -56,18 +58,18 @@ class Hostname extends Resource
 
             Fields\Text::make('Fqdn')
                 ->sortable()
-                ->creationRules(array_get($creationRules, 'fqdn', []))
-                ->updateRules(array_get($updateRules, 'fqdn', [])),
+                ->creationRules(Arr::get($creationRules, 'fqdn', []))
+                ->updateRules(Arr::get($updateRules, 'fqdn', [])),
 
             Fields\Text::make('redirect_to')
                 ->sortable()
-                ->rules(array_get($creationRules, 'redirect_to', [])),
+                ->rules(Arr::get($creationRules, 'redirect_to', [])),
 
             Fields\Boolean::make('Force HTTPS')
-                ->rules(array_get($creationRules, 'force_https')),
+                ->rules(Arr::get($creationRules, 'force_https')),
 
             Fields\DateTime::make('Under Maintenance Since')
-                ->rules(array_get($creationRules, 'under_maintenance_since', [])),
+                ->rules(Arr::get($creationRules, 'under_maintenance_since', [])),
 
             Fields\BelongsTo::make('Tenant', 'website'),
         ];
@@ -77,6 +79,7 @@ class Hostname extends Resource
      * Get the cards available for the request.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function cards(Request $request)
@@ -88,6 +91,7 @@ class Hostname extends Resource
      * Get the filters available for the resource.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function filters(Request $request)
@@ -99,6 +103,7 @@ class Hostname extends Resource
      * Get the lenses available for the resource.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function lenses(Request $request)
@@ -110,6 +115,7 @@ class Hostname extends Resource
      * Get the actions available for the resource.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function actions(Request $request)
