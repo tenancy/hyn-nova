@@ -2,9 +2,10 @@
 
 namespace Tenancy\HynNova\Resources;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Resource;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use Tenancy\HynNova\Validators\WebsiteValidator;
 
 class Tenant extends Resource
@@ -44,6 +45,7 @@ class Tenant extends Resource
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function fields(Request $request)
@@ -56,11 +58,11 @@ class Tenant extends Resource
 
             Fields\Text::make('Uuid')
                 ->sortable()
-                ->creationRules(array_get($creationRules, 'uuid', []))
-                ->updateRules(array_get($updateRules, 'uuid', []))
-                ->help(!config('tenancy.website.disable-random-id') ? 'Will be generated automatically if left blank' : ''),
+                ->creationRules(Arr::get($creationRules, 'uuid', []))
+                ->updateRules(Arr::get($updateRules, 'uuid', []))
+                ->help(! config('tenancy.website.disable-random-id') ? 'Will be generated automatically if left blank' : ''),
 
-            Fields\HasMany::make('Hostnames')
+            Fields\HasMany::make('Hostnames'),
         ];
     }
 
@@ -68,6 +70,7 @@ class Tenant extends Resource
      * Get the cards available for the request.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function cards(Request $request)
@@ -79,6 +82,7 @@ class Tenant extends Resource
      * Get the filters available for the resource.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function filters(Request $request)
@@ -90,6 +94,7 @@ class Tenant extends Resource
      * Get the lenses available for the resource.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function lenses(Request $request)
@@ -101,6 +106,7 @@ class Tenant extends Resource
      * Get the actions available for the resource.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return array
      */
     public function actions(Request $request)
